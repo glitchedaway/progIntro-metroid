@@ -82,7 +82,7 @@ level = [
     "W     W    E   W   W",
     "WWWWWWWWWWWWWWWWWWWW",
 ]
-
+screenDrawn = False
 # turns the level string into actual level graphics - W = wall, E = exist. 
 x = y = 0
 for row in level:
@@ -119,9 +119,12 @@ while running:
         player.move(0, 2)
 
     #draw the screen
-    screen.fill((0,0,0))
-    for wall in walls:
-        pygame.draw.rect(screen, (255, 255, 255), wall.rect)
-        pygame.draw.rect(screen, (255, 0, 0), end_rect)
-        pygame.draw.rect(screen, (255, 200, 0), player.rect)
-        pygame.display.flip()
+    if screenDrawn = False:
+        screen.fill((0,0,0))
+        for wall in walls:
+            pygame.draw.rect(screen, (255, 255, 255), wall.rect)
+            pygame.draw.rect(screen, (255, 0, 0), end_rect)
+            pygame.draw.rect(screen, (255, 200, 0), player.rect)
+            pygame.display.flip()
+        screenDrawn = True
+
