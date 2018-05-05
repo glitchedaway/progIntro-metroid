@@ -7,19 +7,29 @@ from pygame import *
 from player import *
 from levelSpawn import *
 
-os.environ["SDL_VIDEO_CENTERED"] = "1"
-pygame.init()
-size = [640, 480]
-screen = pygame.display.set_mode(size)
-player = Player()
+# exit the program
+def events():
+	for event in pygame.event.get():
+		if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
+			pygame.quit()
+			sys.exit()
+
+# define display surface			
+W, H = 480, 360
+HW, HH = W / 2, H / 2
+AREA = W * H
 
 
 # general defined variables
 clock = pygame.time.Clock()
-
+BLACK = (0, 0, 0, 255)
+WHITE = (255, 255, 255, 255)
+RED = (255, 0, 0, 255)
 # turns the level string into actual level graphics - W = wall, E = exist. 
 createLevel(levelA)
-
+platRed  = platforms(RED)
+platWhite = platforms(WHITE)
+P = player()
 running = True
 while running:
     clock.tick(60) 
@@ -28,26 +38,13 @@ while running:
             running = False
         if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
             running = False
-        # close the game if escape or the x is hit
-    
-    # move the player either 
-    key = pygame.key.get_pressed()
-    if key[pygame.K_LEFT]:
-        player.move(-1, 0)
-        print("Player moved left")
-    if key[pygame.K_RIGHT]:
-        player.move(1, 0)
-        print("Player moved right")
-    if key[pygame.K_UP]:
-        playerJump()
-        print("Player jumped")
-    if key[pygame.K_DOWN]:
-        player.move(0, 1)
-        print("Player moved down")
-    #draw the screen
-    screen.fill((255,255,255))
-    for wall in walls:
-        pygame.draw.rect(screen, (0, 0, 0), wall.rect)
-    pygame.draw.rect(screen, (255, 0, 0), end_rect)
-    pygame.draw.rect(screen, (255, 200, 0), player.rect)
-    pygame.display.flip()
+    events()
+	redP = True
+	platRed.do(P)
+	redP = False
+	platWhite.do(P)
+	P.do()
+	pygame.display.update()
+	CLOCK.tick(FPS)
+	DS.fill(BLACK)
+    pygame.display.flip()   

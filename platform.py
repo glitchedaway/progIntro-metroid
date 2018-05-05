@@ -1,58 +1,53 @@
 import math, random, sys
 import pygame
 from pygame.locals import *
-
-# exit the program
-def events():
-	for event in pygame.event.get():
-		if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
-			pygame.quit()
-			sys.exit()
-
-# colors so they don't have to be repeated
+import player 
+# define some colors
 BLACK = (0, 0, 0, 255)
 WHITE = (255, 255, 255, 255)
-
-platform_y = H - 50
-
-
-collision_map = pygame.Surface((W, H))
-HIT = WHITE
-MISS = BLACK
-pygame.draw.line(collision_map, WHITE, (0, platform_y), (W, platform_y), 1)
-
-
-player_x = HW
-player_y = 0
-falling_velocity = 3
-
-# main loop
-while True:
-	events()
-
-    #if you're going to fall into a platform then you are on the platform
-	if player_y <= platform_y and player_y + falling_velocity >= platform_y:
-		player_y = platform_y
-	else:
-    #otherwise you fall as normal
-		player_y += falling_velocity
+RED = (255, 0, 0, 255)
+class platform:
+	def __init__(self, x, y, width):
+		self.x1 = x
+		self.y = y
+		self.x2 = x + width
+		self.redP = True
+	def test(self, player):
+	    # the player is left of a platform's left edge or right of a platform's right edge: he doesn't collide
+		if player.x < self.x1 or player.x > self.x2: return None
+		#however, if it's hitting the top and he's moving down towards the 
+		if player.y <= self.y and player.y + player.velocity >= self.y: return self
+		return None
 		
+class platforms:
+	def __init__(self):
+		self.container = list([])
+	
+	def add(self, p):
+		self.container.append(p)
+		
+	def testCollision(self, player):
+		if not player.falling: return False
+		for p in self.container:
+			result = p.test(player)
+			if result:
+				player.currentPlatform = result
+				player.y = result.y
+				player.falling = False
+				return True
+		return False
+		
+	def draw(self):
+		global WHITE, RED
+		display = pygame.display.get_surface()
+		for p in self.container:
+			if redP = True:
+				pygame.draw.line(display, RED, (p.x1, p.y), (p.x2, p.y), 1)
+			else:
+				pygame.draw.line(display, WHITE, (p.x1, p.y), (p.x2, p.y), 1
+	def do(self, player):
+		self.testCollision(player)
+		self.draw()
 
-	collision = False
-    #if you hit a white line you have hit the platform
-    #otherwise you didn't and you keep falling
-	for collision_y in range(player_y, player_y + falling_velocity):
-		color = collision_map.get_at((player_x, collision_y))
-		if color == HIT:
-			collision = True
-			player_y = collision_y
-			break
-	if not collision:
-		player_y += falling_velocity
 
-    #draw the player as a circle
-	pygame.draw.circle(DS, WHITE, (player_x, player_y - 25), 25, 0)
-    #draw platforms as lines
-	pygame.draw.line(DS, WHITE, (0, platform_y), (W, platform_y), 1)
-	#update screen
-	pygame.display.update()
+
