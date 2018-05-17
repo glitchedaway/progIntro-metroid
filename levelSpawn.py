@@ -1,10 +1,4 @@
 import pygame
-walls = []
-class Wall(object):
-    
-    def __init__(self, pos):
-        walls.append(self)
-        self.rect = pygame.Rect(pos[0], pos[1], 16, 16)
 
 levelMap = [
     [LMap11, LMap12, LMap13]
@@ -109,19 +103,3 @@ LMap33 = [
     "W||||||||||W"
     "NNNNNNNNNNNN"
 ]
-# turns the level string into actual level graphics - W = wall, E = exist. 
-def createLevel(level):
-    x = y = 0
-    for row in level:
-        for col in row:
-            if col == "W":
-                #white vertical line
-                # for each column in the row (aka each character in each string in each list), put a wall there
-            if col == "N":
-                #make a white line there
-                # ending rectangle is there.
-            if col = "_"
-                #make a red line there
-            x += 16
-        y += 16
-        x = 0

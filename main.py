@@ -5,7 +5,14 @@ from random import *
 import pygame
 from pygame import *
 from player import *
-from levelSpawn import *
+from settings import *
+from platform import *
+
+pygame.init()
+W, H = 720, 540
+HW, HH = W / 2, H / 2
+AREA = W * H
+DS = pygame.display.set_mode((W,H))
 
 # exit the program
 def events():
@@ -14,37 +21,33 @@ def events():
 			pygame.quit()
 			sys.exit()
 
-# define display surface			
-W, H = 480, 360
-HW, HH = W / 2, H / 2
-AREA = W * H
-
 
 # general defined variables
 clock = pygame.time.Clock()
-BLACK = (0, 0, 0, 255)
-WHITE = (255, 255, 255, 255)
-RED = (255, 0, 0, 255)
-# turns the level string into actual level graphics - W = wall, E = exist. 
-createLevel(levelA)
-platRed  = platforms(RED)
-platWhite = platforms(WHITE)
-P = player()
+P = Player(3, 80)
+P.setLocation(120, 80)
+# pRed = platforms(flatP)
+# pWhite = platforms(solidP)
+# pBlue = platforms(prizeP)
+createLevel()
 running = True
+prize = False
+LSpawn = False
+events()
 while running:
-    clock.tick(60) 
-    for e in pygame.event.get():    
-        if e.type == pygame.QUIT:
-            running = False
-        if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-            running = False
-    events()
-	redP = True
-	platRed.do(P)
-	redP = False
-	platWhite.do(P)
+	DS.fill(0)
+	#if you hit the blue box, set your position below it, spawn in the boxes at the top, move down.
+	if P.prizeCheck == True and prize == False:
+		prize = True
+		createLevel()
+		P.setLocation(1240, 480)
+	#draw all the walls
+	for wall in wallsPart:
+		pygame.draw.rect(DS, (255, 255, 255), wall.rect)
+	for wall in wallsFull:
+		pygame.draw.rect(DS, (255, 255, 255), wall.rect)
+	pygame.draw.rect(DS, (255, 200, 0), P.rect)
+	events()
 	P.do()
-	pygame.display.update()
-	CLOCK.tick(FPS)
-	DS.fill(BLACK)
-    pygame.display.flip()   
+	#flip your screen
+	pygame.display.flip()
